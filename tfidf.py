@@ -1,10 +1,20 @@
+#!/usr/bin/env python
+
 from __future__ import division
 
+import jieba
+import jieba.analyse
 import psu
-import math
-import sys
 
+
+import math
 from textblob import TextBlob as tb
+
+
+import sys  
+import re
+import pdb
+
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
@@ -33,18 +43,25 @@ def build_words_count(blob):
     return words_count
 
 files = psu.ls()
+
 files = filter(lambda x: x.endswith('txt'), files)
 
 data = []
 for file in files:
     with open (file, "r") as myfile:
-        d=myfile.read().replace('\n', '')
+        #d = myfile.read().replace('\n', '')
+        d = myfile.read()
         d = unicode(d, errors='ignore')
+        #pdb.set_trace()
+        #d = re.sub("^>.*?\n", "", d)
+        #print(len(d))
+        d = re.sub(r"\n>[^\n]*", "\n", d)
+        #print(len(d))
         data.append(tb(d))
 
 bloblist = data
 
-print('for blob')
+print('calculating tf-idf, please wait..')
 #import pdb;pdb.set_trace()
 for blob in bloblist:
     #print(len(blob.words))
@@ -61,4 +78,9 @@ for i, blob in enumerate(bloblist):
     print(files[i], sorted_words[:20])
 
 
-print('exit')
+
+#import pdb;pdb.set_trace()
+
+
+
+
